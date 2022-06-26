@@ -12,25 +12,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
             crossorigin="anonymous"></script>
+    <style>
+        span{
+            text-decoration-line: underline;
+        }
+    </style>
 </head>
 <body>
-<input type="radio">
-<input type="radio">
-<input type="radio">
+<form action="/action_page.php">
+    <p>Please select your favorite Web language:</p>
+      <input type="radio" id="html" name="fav_language" value="HTML">
+      <label for="html">HTML</label><br>
+      <input type="radio" id="css" name="fav_language" value="CSS">
+      <label for="css">CSS</label><br>
+      <input type="radio" id="javascript" name="fav_language" value="JavaScript">
+      <label for="javascript">JavaScript</label>
+</form>
+
 <div id="display"></div>
 </body>
 <script type="text/javascript">
     findAllQuestion();
     function findAllQuestion() {
-        let a = "list <br>"
+        let a = ""
         $.ajax({
             type: "GET",
             url: "http://localhost:8080/api/questions",
             success: function (questions) {
                 for (let i = 0; i < questions.length; i++) {
                     let q = questions[i];
-                    a += `<h2>Câu Hỏi số ${q.id}. ${q.content}</h2>
-                            <h4 id="${q.id}"></h4>`
+                    a += `<label style="font-weight: bold"><span>Câu ${q.id}</span>. ${q.content}</label><br>
+                            <p id="${q.id}"></p>`
                     $.ajax({
                         type: "GET",
                         url: "http://localhost:8080/api/answers/question/" + q.id,
@@ -38,14 +50,13 @@
                             let b = ""
                             if (q.type === 2) {
                                 for (let j = 0; j < answers.length; j++) {
-                                    b += `<h4><input type="checkbox" value="">. ${answers[j].name}</h4>`;
+                                    b += `<label style="text-indent: 30px"><input type="checkbox" id="${answers[j].name}" value="" name="${i}">. ${answers[j].name}</label><br>`;
                                 }
                             } else {
                                 for (let j = 0; j < answers.length; j++) {
-                                    b += `<h4><input type="radio" value="">. ${answers[j].name}</h4>`;
+                                    b += `<label style="text-indent: 30px"><input type="radio" id="${answers[j].name}" value="" name="${i}">. ${answers[j].name}</label><br>`;
                                 }
                             }
-
                             document.getElementById(q.id).innerHTML = b
                         },
                     })
@@ -53,7 +64,6 @@
                 document.getElementById("display").innerHTML = a;
             },
         })
-
     }
 
 </script>
